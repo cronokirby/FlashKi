@@ -1,7 +1,6 @@
 # Created by .ignore support plugin (hsz.mobi)
 ### Kotlin template
 # Compiled class file
-*.class
 
 # Log file
 *.log
@@ -24,3 +23,5 @@
 hs_err_pid*
 
 flashki.iml
+target/*
+.idea/*
