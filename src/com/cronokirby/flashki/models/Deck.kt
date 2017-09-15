@@ -10,7 +10,7 @@ import java.time.LocalDate
  * @param cards the list of cards this deck will contain
  * @param category the initial set of tags this deck should have
  */
-class Deck(cards: Collection<Card>, val category: List<String>) {
+class Deck(cards: Collection<Card>, val category: List<String>, var name: String) {
     val cardMap = cards.associateByTo(hashMapOf(), {it.id}, {it})
     val createdAt = LocalDate.now()
     val cardCount
