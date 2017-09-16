@@ -11,7 +11,7 @@ import java.time.LocalDate
  * @param category the initial set of tags this deck should have
  */
 class Deck(cards: Collection<Card>, val category: List<String>, var name: String) {
-    private val cardMap = cards.associateByTo(hashMapOf(), {it.id}, {it})
+    private val cardMap = cards.associateByTo(linkedMapOf(), {it.id}, {it})
     val cardList // we don't want this to be mutable
         get() = cardMap.values.toList()
     val createdAt = LocalDate.now()
