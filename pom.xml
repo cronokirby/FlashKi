@@ -14,7 +14,12 @@
 
     <dependencies>
         <dependency>
-            <groupId>io.reactivex</groupId>
+            <groupId>io.reactivex.rxjava2</groupId>
+            <artifactId>rxjava</artifactId>
+            <version>2.1.3</version>
+        </dependency>
+        <dependency>
+            <groupId>io.reactivex.rxjava2</groupId>
             <artifactId>rxkotlin</artifactId>
             <version>RELEASE</version>
             <scope>compile</scope>
