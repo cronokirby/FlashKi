@@ -2,6 +2,7 @@ package com.cronokirby.flashki.controllers
 
 import com.cronokirby.flashki.models.Card
 import com.cronokirby.flashki.models.Deck
+import com.cronokirby.flashki.models.DeckMeta
 import org.junit.jupiter.api.Test
 
 import org.junit.jupiter.api.Assertions.*
@@ -11,7 +12,7 @@ internal class DeckEditorTest {
 
    private fun newEditor(): DeckEditor {
        val cards = listOf(Card("hello", "bonjour"), Card("bye", "tchuss"))
-       val deck = Deck(cards, listOf(), "deck1")
+       val deck = Deck(cards, DeckMeta("japanese", "deck1"))
        return DeckEditor(deck)
    }
 

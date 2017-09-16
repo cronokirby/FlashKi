@@ -14,6 +14,18 @@
 
     <dependencies>
         <dependency>
+            <groupId>io.reactivex</groupId>
+            <artifactId>rxkotlin</artifactId>
+            <version>RELEASE</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.github.thomasnield</groupId>
+            <artifactId>rxkotlinfx</artifactId>
+            <version>RELEASE</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
             <groupId>org.jetbrains.kotlin</groupId>
             <artifactId>kotlin-stdlib-jre8</artifactId>
             <version>${kotlin.version}</version>

@@ -2,10 +2,12 @@ package com.cronokirby.flashki.controllers
 
 import com.cronokirby.flashki.models.Card
 import com.cronokirby.flashki.models.Deck
-import tornadofx.Controller
+import com.cronokirby.flashki.models.DeckMeta
+import javafx.beans.property.SimpleObjectProperty
+import tornadofx.*
 
 
-class DeckEditor(val deck: Deck) : Controller() {
+class DeckEditor(val deck: Deck = Deck(listOf(), DeckMeta("", ""))) : Controller() {
 
     private enum class State {
         FirstCard,
@@ -14,29 +16,31 @@ class DeckEditor(val deck: Deck) : Controller() {
         NewCard
     }
 
-    var currentCard = Card("", "")
-        get
-        private set
+    private val cards = deck.cards.toMutableList()
+    private var index = cards.size
+    val cardProp = SimpleObjectProperty<Card>(Card("", ""))
+    var currentCard by cardProp
+
     private val editingState
         get() = when(index) {
+            cards.size - 1 -> State.LastCard
+            cards.size -> State.NewCard
             0 -> State.FirstCard
-            deck.cardCount - 1 -> State.LastCard
-            deck.cardCount -> State.NewCard
             else -> State.SomeCard
         }
-    private var index = deck.cardCount
 
     fun moveLeft() {
        when (editingState) {
            State.FirstCard -> {}
            State.SomeCard, State.LastCard -> {
+               cards[index] = currentCard
                index -= 1
-               currentCard = deck.cardList[index]
+               currentCard = cards[index]
            }
            State.NewCard -> {
-               deck.add(currentCard)
+               cards.add(currentCard)
                index -= 1
-               currentCard = deck.cardList[index]
+               currentCard = cards[index]
            }
        }
     }
@@ -44,16 +48,18 @@ class DeckEditor(val deck: Deck) : Controller() {
     fun moveRight() {
         when (editingState) {
             State.FirstCard, State.SomeCard -> {
+                cards[index] = currentCard
                 index += 1
-                currentCard = deck.cardList[index]
+                currentCard = cards[index]
             }
             State.LastCard -> {
+                cards[index] = currentCard
                 index += 1
                 currentCard = Card("", "")
             }
             State.NewCard -> {
                 index += 1
-                deck.add(currentCard)
+                cards.add(currentCard)
                 currentCard = Card("", "")
             }
         }
