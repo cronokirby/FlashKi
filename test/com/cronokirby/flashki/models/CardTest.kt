@@ -10,10 +10,10 @@ internal class CardTest {
     fun isThat() {
         val card = Card("hello", "bonjour")
         // It should not be equal to cards with different fields
-        assertFalse(card.isThat(Card("hello", "hallo")))
-        assertFalse(card.isThat(Card("bonjour", "hello")))
+        assertFalse(card == Card("hello", "hallo"))
+        assertFalse(card == Card("bonjour", "hello"))
         // but it should be equal to cards with the same fields
-        assertTrue(card.isThat(card))
-        assertTrue(card.isThat(Card("hello", "bonjour")))
+        assertTrue(card == card)
+        assertTrue(card == Card("hello", "bonjour"))
     }
 }

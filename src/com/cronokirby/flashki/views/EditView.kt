@@ -1,5 +1,7 @@
 package com.cronokirby.flashki.views
 
+import com.cronokirby.flashki.events.ChangeViewEvent
+import com.cronokirby.flashki.events.ViewPages
 import com.cronokirby.flashki.models.Card
 import com.github.thomasnield.rxkotlinfx.actionEvents
 import com.github.thomasnield.rxkotlinfx.toObservable
@@ -11,13 +13,13 @@ import javafx.scene.control.Button
 import javafx.scene.control.TextField
 import tornadofx.*
 
-
 class EditView : View() {
     private val startIndex = 0
     private val cards = mutableListOf<Card>()
+    // the signal of current cards
     private val cardSubj = PublishSubject.create<Card>()
-    private val cannotAdd = PublishSubject.create<Boolean>()
-    private val index = PublishSubject.create<Pair<Int, Int>>()
+    // the past, and current navigation index
+    private var index = PublishSubject.create<Pair<Int, Int>>()
 
     // nodes that we need to have globally available
     private var leftButton: Button by singleAssign()
@@ -41,12 +43,21 @@ class EditView : View() {
     override val root = borderpane {
         val isNew = index.map { it.second >= cards.size }
         // only allow us to add cards if they're not empty and new
-        Observables.combineLatest(cardSubj, isNew.filter {it}, { card, _ ->
-            !card.isFull() || cards.find { it.isThat(card) } != null
-        }).subscribe(cannotAdd)
+        val cannotAdd = Observables.combineLatest(cardSubj, isNew, { card, new ->
+            !card.isFull() || (new && cards.contains(card))
+        })
 
         top {
-            label("Name Here")
+            hbox {
+                textfield {
+                    promptText = "Deck Name"
+                }
+                button("Save") {
+                    action {
+                        fire(ChangeViewEvent(ViewPages.NotEditing))
+                    }
+                }
+            }
         }
 
         left {
