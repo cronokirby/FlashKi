@@ -41,8 +41,3 @@ class Card(front: String, back: String) {
         return "Card(front=$front, back=$back)"
     }
 }
-
-class CardModel(property: ObjectProperty<Card>) : ItemViewModel<Card>(itemProperty = property) {
-    val front = bind(autocommit = true) { item?.frontProperty }
-    val back = bind(autocommit = true) { item?.backProperty }
-}
