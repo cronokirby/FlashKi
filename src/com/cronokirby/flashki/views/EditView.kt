@@ -16,7 +16,7 @@ class EditView : View() {
     private val startIndex = 0
     private val cards = mutableListOf<Card>()
     private val cardSubj = PublishSubject.create<Card>()
-    private val canAdd = PublishSubject.create<Boolean>()
+    private val cannotAdd = PublishSubject.create<Boolean>()
     private val index = PublishSubject.create<Pair<Int, Int>>()
 
     // nodes that we need to have globally available
@@ -26,40 +26,45 @@ class EditView : View() {
     private var back: TextField by singleAssign()
 
     init {
-        // whether or not a card can be added or not
-        cardSubj.map { it.front == "" || it.back == "" }
-                .subscribe(canAdd)
         // keeping track of adding cards to the backing list
-        index.map { it.first }
-                .withLatestFrom(cardSubj, {a, b -> Pair(a, b)})
+        index.withLatestFrom(cardSubj, { a, b -> Pair(a, b)})
                 .subscribe { (ind, card) ->
-           if (ind in 0.until(cards.size)) {
-               cards[ind] = card
-           } else {
+           val (past, now) = ind
+           if (past in 0.until(cards.size)) {
+               cards[past] = card
+           } else if (past < now){
                cards.add(card)
            }
         }
     }
 
     override val root = borderpane {
+        val isNew = index.map { it.second >= cards.size }
+        // only allow us to add cards if they're not empty and new
+        Observables.combineLatest(cardSubj, isNew.filter {it}, { card, _ ->
+            !card.isFull() || cards.find { it.isThat(card) } != null
+        }).subscribe(cannotAdd)
+
         top {
             label("Name Here")
         }
 
         left {
-            leftButton = button("Move Left") {
+            leftButton = button("Previous Card") {
                 index.map { it.second <= 0 }.subscribe { this.disableProperty().set(it) }
             }
         }
         right {
-            rightButton = button("Move Right") {
-                canAdd.subscribe { this.disableProperty().set(it) }
+            rightButton = button {
+                isNew.map { if (it) "Add Card" else "Next Card" }
+                        .subscribe { this.textProperty().set(it) }
+                cannotAdd.subscribe { this.disableProperty().set(it) }
             }
         }
         // keeping track of navigation
         Observable.merge(
-                leftButton.actionEvents().map {-1},
-                rightButton.actionEvents().map {1}
+                leftButton.actionEvents().map { -1 },
+                rightButton.actionEvents().map { 1 }
         ).scan(Pair(startIndex, startIndex)) { (_, acc), x ->
             Pair(acc, Math.max(0, acc + x))
         }.subscribe(index)
@@ -72,11 +77,11 @@ class EditView : View() {
                 }
                 label("Back Side")
                 back = textfield {
-                    this.actionEvents().withLatestFrom(canAdd, { _, bool -> bool })
-                            .subscribe {
-                                front.requestFocus()
-                                rightButton.fire()
-                            }
+                    this.actionEvents().subscribe {
+                        front.requestFocus()
+                        // this will be protected from advances by the button
+                        rightButton.fire()
+                    }
                 }
                 index.map { it.second }.subscribe {
                     val newCard = cards.getOrNull(it)

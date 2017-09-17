@@ -33,11 +33,13 @@ class Card(front: String, back: String) {
         return this.id == that.id
     }
 
+    fun isFull(): Boolean {
+        return front != "" && back != ""
+    }
+
     override fun toString(): String {
         return "Card(front=$front, back=$back)"
     }
-
-
 }
 
 class CardModel(property: ObjectProperty<Card>) : ItemViewModel<Card>(itemProperty = property) {
