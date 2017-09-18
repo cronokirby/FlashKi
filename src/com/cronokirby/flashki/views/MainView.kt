@@ -6,18 +6,18 @@ import com.cronokirby.flashki.models.Deck
 import tornadofx.*
 
 class MainView : View() {
-    val centerView: DeckView by inject()
+    val deckView: DeckView by inject()
     var editView: EditView = EditView(Deck.empty())
 
     override val root = borderpane {
-        center = centerView.root
+        center = deckView.root
         subscribe<ChangeViewEvent> { event ->
             when (event.page) {
                 is ViewPages.NewEditing -> {
                     editView = EditView(event.page.deck)
                     center.replaceWith(editView.root)
                 }
-                is ViewPages.NotEditing -> center.replaceWith(centerView.root)
+                is ViewPages.NotEditing -> center.replaceWith(deckView.root)
             }
         }
     }

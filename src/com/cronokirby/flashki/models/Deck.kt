@@ -32,4 +32,6 @@ class Deck(val cards: List<Card>, val metaData: DeckMeta) {
     override fun hashCode(): Int {
         return metaData.hashCode()
     }
+
+
 }
