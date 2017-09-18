@@ -3,6 +3,7 @@ package com.cronokirby.flashki.views
 import com.cronokirby.flashki.controllers.DeckStore
 import com.cronokirby.flashki.events.ChangeViewEvent
 import com.cronokirby.flashki.events.ViewPages
+import com.cronokirby.flashki.models.Deck
 import tornadofx.*
 
 class DeckView : View() {
@@ -11,7 +12,7 @@ class DeckView : View() {
     override val root = vbox {
         button("Create a deck") {
             action {
-                fire(ChangeViewEvent(ViewPages.Editing))
+                fire(ChangeViewEvent(ViewPages.Editing(Deck.empty())))
             }
         }
         listview(store.decks) {
@@ -20,6 +21,9 @@ class DeckView : View() {
                    vbox {
                        label(it.metaData.name)
                    }
+               }
+               onDoubleClick {
+                   fire(ChangeViewEvent(ViewPages.Editing(it)))
                }
            }
         }

@@ -5,6 +5,8 @@ import com.cronokirby.flashki.events.ChangeViewEvent
 import com.cronokirby.flashki.events.ViewPages
 import com.cronokirby.flashki.models.Card
 import com.cronokirby.flashki.models.Category
+import com.cronokirby.flashki.models.Deck
+import com.cronokirby.flashki.models.DeckMeta
 import com.github.thomasnield.rxkotlinfx.actionEvents
 import com.github.thomasnield.rxkotlinfx.toObservable
 import io.reactivex.Observable
@@ -15,11 +17,11 @@ import javafx.scene.control.Button
 import javafx.scene.control.TextField
 import tornadofx.*
 
-class EditView : View() {
+class EditView(oldDeck: Deck) : View() {
     val store: DeckStore by inject()
 
-    private val startIndex = 0
-    private val cards = mutableListOf<Card>()
+    private val startIndex = oldDeck.cards.size
+    private val cards = oldDeck.cards.toMutableList()
     // the signal of current cards
     private val cardSubj = PublishSubject.create<Card>()
     // the past, and current navigation index
@@ -55,14 +57,15 @@ class EditView : View() {
             hbox {
                 val name = textfield {
                     promptText = "Deck Name"
+                    text = oldDeck.metaData.name
                 }
                 val saveButton = button("Save")
                 Observables.combineLatest(
                         name.textProperty().toObservable(),
                         saveButton.actionEvents()
                 ).subscribe { (name, _) ->
-                    store.addRaw(cards, Category("category"), name)
-                    fire(ChangeViewEvent(ViewPages.NotEditing))
+                    store.editOut(oldDeck, Deck(cards, DeckMeta(Category("category"), name)))
+                    fire(ChangeViewEvent(ViewPages.NotEditing()))
                 }
             }
         }

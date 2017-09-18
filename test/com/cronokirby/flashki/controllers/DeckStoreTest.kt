@@ -10,19 +10,15 @@ import org.junit.jupiter.api.Assertions.*
 
 internal class DeckStoreTest {
     @Test
-    fun addDeck() {
+    fun editOut() {
         val store = DeckStore()
         val d = Deck(listOf(), DeckMeta(Category("japanese"), "foo"))
-        store.addDeck(d)
-        store.addDeck(d)
+        store.editOut(Deck.empty(), d)
         assertTrue(store.decks.contains(d))
-    }
-
-    @Test
-    fun addRaw() {
-        val store = DeckStore()
-        val d = Deck(listOf(), DeckMeta(Category("japanese"), "foo"))
-        store.addRaw(listOf(), Category("japanese"), "foo")
-        assertTrue(store.decks.contains(d))
+        val d2 = d.copy(listOf(), DeckMeta(Category("japanese"), "new name"))
+        store.editOut(d, d2)
+        assertTrue(store.decks.contains(d2))
+        assertFalse(store.decks.contains(d))
+        assertEquals(1, store.decks.size)
     }
 }

@@ -10,12 +10,11 @@ import tornadofx.Controller
 class DeckStore : Controller() {
     val decks = FXCollections.observableArrayList<Deck>()
 
-    fun addDeck(deck: Deck) {
-        decks.add(deck)
-    }
-
-    fun addRaw(cards: Collection<Card>, category: Category, name: String) {
-        val deck = Deck(cards.toList(), DeckMeta(category, name))
-        addDeck(deck)
+    fun editOut(oldDeck: Deck, newDeck: Deck) {
+        val i = decks.indexOfFirst { it.metaData == oldDeck.metaData }
+        if (i >= 0) {
+            decks.removeAt(i)
+        }
+        decks.add(newDeck)
     }
 }

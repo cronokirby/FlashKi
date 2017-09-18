@@ -12,8 +12,8 @@ class MainView : View() {
         center = centerView.root
         subscribe<ChangeViewEvent> { event ->
             when (event.page) {
-                ViewPages.Editing -> center.replaceWith(EditView().root)
-                ViewPages.NotEditing -> center.replaceWith(DeckView().root)
+                is ViewPages.Editing -> center.replaceWith(EditView(event.page.deck).root)
+                is ViewPages.NotEditing -> center.replaceWith(DeckView().root)
             }
         }
     }

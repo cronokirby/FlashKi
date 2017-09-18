@@ -1,10 +1,11 @@
 package com.cronokirby.flashki.events
 
+import com.cronokirby.flashki.models.Deck
 import tornadofx.FXEvent
 
-enum class ViewPages {
-    Editing,
-    NotEditing
+open class ViewPages private constructor() {
+    class Editing(val deck: Deck) : ViewPages()
+    class NotEditing : ViewPages()
 }
 
 class ChangeViewEvent(val page: ViewPages) : FXEvent()
