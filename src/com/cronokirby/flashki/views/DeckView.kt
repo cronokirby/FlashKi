@@ -7,12 +7,12 @@ import com.cronokirby.flashki.models.Deck
 import tornadofx.*
 
 class DeckView : View() {
-    val store: DeckStore by inject()
+    private val store: DeckStore by inject()
 
     override val root = vbox {
         button("Create a deck") {
             action {
-                fire(ChangeViewEvent(ViewPages.Editing(Deck.empty())))
+                fire(ChangeViewEvent(ViewPages.NewEditing(Deck.empty())))
             }
         }
         listview(store.decks) {
@@ -20,10 +20,11 @@ class DeckView : View() {
                graphic = cache {
                    vbox {
                        label(it.metaData.name)
+                       label("${it.cardCount} cards")
                    }
                }
                onDoubleClick {
-                   fire(ChangeViewEvent(ViewPages.Editing(it)))
+                   fire(ChangeViewEvent(ViewPages.NewEditing(it)))
                }
            }
         }

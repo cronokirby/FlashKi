@@ -15,7 +15,7 @@ internal class DeckStoreTest {
         val d = Deck(listOf(), DeckMeta(Category("japanese"), "foo"))
         store.editOut(Deck.empty(), d)
         assertTrue(store.decks.contains(d))
-        val d2 = d.copy(listOf(), DeckMeta(Category("japanese"), "new name"))
+        val d2 = Deck(listOf(), DeckMeta(Category("japanese"), "new name"))
         store.editOut(d, d2)
         assertTrue(store.decks.contains(d2))
         assertFalse(store.decks.contains(d))

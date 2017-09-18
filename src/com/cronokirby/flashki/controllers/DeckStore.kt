@@ -11,10 +11,7 @@ class DeckStore : Controller() {
     val decks = FXCollections.observableArrayList<Deck>()
 
     fun editOut(oldDeck: Deck, newDeck: Deck) {
-        val i = decks.indexOfFirst { it.metaData == oldDeck.metaData }
-        if (i >= 0) {
-            decks.removeAt(i)
-        }
+        decks.remove(oldDeck)
         decks.add(newDeck)
     }
 }
