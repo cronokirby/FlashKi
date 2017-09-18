@@ -1,7 +1,5 @@
 package com.cronokirby.flashki.models
 
-import java.time.LocalDate
-
 /**
  * A deck of cards to study
  *
