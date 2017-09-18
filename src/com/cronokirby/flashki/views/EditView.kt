@@ -1,8 +1,10 @@
 package com.cronokirby.flashki.views
 
+import com.cronokirby.flashki.controllers.DeckStore
 import com.cronokirby.flashki.events.ChangeViewEvent
 import com.cronokirby.flashki.events.ViewPages
 import com.cronokirby.flashki.models.Card
+import com.cronokirby.flashki.models.Category
 import com.github.thomasnield.rxkotlinfx.actionEvents
 import com.github.thomasnield.rxkotlinfx.toObservable
 import io.reactivex.Observable
@@ -14,6 +16,8 @@ import javafx.scene.control.TextField
 import tornadofx.*
 
 class EditView : View() {
+    val store: DeckStore by inject()
+
     private val startIndex = 0
     private val cards = mutableListOf<Card>()
     // the signal of current cards
@@ -49,13 +53,16 @@ class EditView : View() {
 
         top {
             hbox {
-                textfield {
+                val name = textfield {
                     promptText = "Deck Name"
                 }
-                button("Save") {
-                    action {
-                        fire(ChangeViewEvent(ViewPages.NotEditing))
-                    }
+                val saveButton = button("Save")
+                Observables.combineLatest(
+                        name.textProperty().toObservable(),
+                        saveButton.actionEvents()
+                ).subscribe { (name, _) ->
+                    store.addRaw(cards, Category("category"), name)
+                    fire(ChangeViewEvent(ViewPages.NotEditing))
                 }
             }
         }

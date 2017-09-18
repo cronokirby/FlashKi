@@ -5,7 +5,7 @@ import com.cronokirby.flashki.events.ViewPages
 import tornadofx.*
 
 class MainView : View() {
-    val centerView: CenterPage by inject()
+    val centerView: DeckView by inject()
 
     override val root = borderpane {
         top = label("Hello Flashki")
@@ -13,7 +13,7 @@ class MainView : View() {
         subscribe<ChangeViewEvent> { event ->
             when (event.page) {
                 ViewPages.Editing -> center.replaceWith(EditView().root)
-                ViewPages.NotEditing -> center.replaceWith(CenterPage().root)
+                ViewPages.NotEditing -> center.replaceWith(DeckView().root)
             }
         }
     }
